@@ -9,4 +9,18 @@
 
 # Make sure your secret_key_base is kept private
 # if you're sharing your code publicly.
-SampleCoedo::Application.config.secret_key_base = '0292ab0895a5550f49b35e7740a1ee3caa8c4ce0d606572dd7f425e95205c8d3a38313948aa42065cf008602251068a8a9a6b2d83cdeb17c32191d370f63f7a1'
+
+def secure_token
+	token_file = Rails.root.join('.secret')
+	if File.exist?(token_file)
+		#Use the exisiting token.
+		File.read(token_file).chomp
+	else
+		#Generate a new token and store and store it in token_file
+		token = SecureRandom.hex(64)
+		File.write(token_file, token)
+		token
+	end
+end
+
+SampleCoedo::Application.config.secret_key_base = secure_token
